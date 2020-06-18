@@ -24,7 +24,6 @@ public class EmployeeController {
         if (StringUtils.isEmpty(employee.getPassword())) {
             return new AjaxResult().setSuccess(false).setMessage("密码不能为空");
         }
-
         QueryWrapper<Employee> wrapper = new QueryWrapper<>();
         wrapper.eq("username",employee.getUsername());
         wrapper.eq("password",employee.getPassword());

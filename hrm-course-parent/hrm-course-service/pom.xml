@@ -3,20 +3,19 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>hrm-system-parent</artifactId>
+        <artifactId>hrm-course-parent</artifactId>
         <groupId>cn.yinsh</groupId>
         <version>1.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>hrm-system-service</artifactId>
+    <artifactId>hrm-course-service</artifactId>
     <dependencies>
         <dependency>
             <groupId>cn.yinsh</groupId>
-            <artifactId>hrm-system-interface</artifactId>
+            <artifactId>hrm-course-interface</artifactId>
             <version>${project.version}</version>
         </dependency>
-
         <!--web的场景启动器-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -38,6 +37,11 @@
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-config</artifactId>
+        </dependency>
+
 
         <!--引入swagger支持-->
         <dependency>
@@ -51,10 +55,6 @@
             <artifactId>springfox-swagger-ui</artifactId>
             <version>2.9.2</version>
         </dependency>
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-config</artifactId>
-        </dependency>
     </dependencies>
     <build>
         <plugins>
@@ -62,7 +62,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <mainClass>cn.yinsh.hrm.SystemServiceApplication</mainClass>
+                    <mainClass>cn.yinsh.hrm.CourseServiceApplication</mainClass>
                 </configuration>
                 <executions>
                     <execution>

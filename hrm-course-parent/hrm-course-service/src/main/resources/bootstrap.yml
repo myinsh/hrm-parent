@@ -3,7 +3,7 @@ spring:
     config:
       #uri: http://localhost:6969 单机版配置
       profile: dev #环境
-      name: application-system #名称
+      name: application-course #名称
       discovery:
         service-id: config-server
         enabled: true
