@@ -1,0 +1,18 @@
+server:
+  port: 9696
+spring:
+  application:
+    name: CONFIG-SERVER
+  cloud:
+      config:
+        server:
+          git:
+            uri: https://github.com/myinsh/hrm-config.git
+            search-paths: src/main/resources
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+  instance:
+    prefer-ip-address: true
+    instance-id: config-server:9696
