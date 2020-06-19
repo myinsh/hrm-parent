@@ -1,38 +1,86 @@
 package cn.yinsh.hrm.controller;
 
+import cn.yinsh.hrm.service.IEmployeeService;
 import cn.yinsh.hrm.domain.Employee;
-import cn.yinsh.hrm.service.EmployeeService;
+import cn.yinsh.hrm.query.EmployeeQuery;
 import cn.yinsh.hrm.util.AjaxResult;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import cn.yinsh.hrm.util.PageList;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
+@RequestMapping("/employee")
 public class EmployeeController {
-
     @Autowired
-    private EmployeeService employeeService;
+    public IEmployeeService employeeService;
 
-    @PostMapping("/login")
-    public AjaxResult login(@RequestBody Employee employee) {
-        if (StringUtils.isEmpty(employee.getUsername())) {
-            return new AjaxResult().setSuccess(false).setMessage("用户名不能为空");
+    /**
+    * 保存和修改公用的
+    * @param employee  传递的实体
+    * @return Ajaxresult转换结果
+    */
+    @RequestMapping(value="/save",method= RequestMethod.POST)
+    public AjaxResult save(@RequestBody Employee employee){
+        try {
+            if(employee.getId()!=null){
+                employeeService.updateById(employee);
+            }else{
+                employeeService.save(employee);
+            }
+            return AjaxResult.me();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return AjaxResult.me().setSuccess(false).setMessage("保存对象失败！"+e.getMessage());
         }
-        if (StringUtils.isEmpty(employee.getPassword())) {
-            return new AjaxResult().setSuccess(false).setMessage("密码不能为空");
-        }
-        QueryWrapper<Employee> wrapper = new QueryWrapper<>();
-        wrapper.eq("username",employee.getUsername());
-        wrapper.eq("password",employee.getPassword());
-        Employee loginUser = employeeService.getOne(wrapper);
+    }
 
-        if (loginUser == null){
-            return new AjaxResult().setSuccess(false).setMessage("用户名或密码错误");
+    /**
+    * 删除对象信息
+    * @param id
+    * @return
+    */
+    @RequestMapping(value="/{id}",method=RequestMethod.DELETE)
+    public AjaxResult delete(@PathVariable("id") Long id){
+        try {
+            employeeService.removeById(id);
+            return AjaxResult.me();
+        } catch (Exception e) {
+        e.printStackTrace();
+            return AjaxResult.me().setMessage("删除对象失败！"+e.getMessage());
         }
-        loginUser.setPassword(null);
-        return new AjaxResult().setSuccess(true).setMessage("登录成功").setResultObj(loginUser);
+    }
+
+    @RequestMapping(value = "/{id}",method = RequestMethod.GET)
+    public Employee get(@PathVariable("id")Long id)
+    {
+        return employeeService.getById(id);
+    }
+
+
+    /**
+    * 查看所有信息
+    * @return
+    */
+    @RequestMapping(value = "/list",method = RequestMethod.GET)
+    public List<Employee> list(){
+
+        return employeeService.list(null);
+    }
+
+
+    /**
+    * 分页查询数据
+    *
+    * @param query 查询对象
+    * @return PageList 分页对象
+    */
+    @RequestMapping(value = "/page",method = RequestMethod.POST)
+    public PageList<Employee> page(@RequestBody EmployeeQuery query)
+    {
+        Page<Employee> page = employeeService.page(new Page<Employee>(query.getPageNum(), query.getPageSize()));
+        return new PageList<>(page.getTotal(),page.getRecords());
     }
 }
