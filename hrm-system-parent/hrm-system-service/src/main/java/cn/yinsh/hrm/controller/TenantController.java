@@ -90,7 +90,7 @@ public class TenantController {
         try {
             registerVo.setRegisterTime(System.currentTimeMillis());
             tenantService.register(registerVo);
-            return AjaxResult.me().setSuccess(true).setMessage("注册成功");
+            return AjaxResult.me().setSuccess(true).setMessage("注册成功").setResultObj(registerVo);
         } catch (Exception e) {
             e.printStackTrace();
             return AjaxResult.me().setSuccess(false).setMessage("注册失败"+e.getMessage());
