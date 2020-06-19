@@ -11,7 +11,7 @@
     <insert id="insertBatch">
         INSERT INTO t_role_permission(role_id, permission_id) VALUES
         <foreach collection="permissionIds" item="permissionId" separator=",">
-            #{roleId},#{permissionId}
+            (#{roleId},#{permissionId})
         </foreach>
     </insert>
 

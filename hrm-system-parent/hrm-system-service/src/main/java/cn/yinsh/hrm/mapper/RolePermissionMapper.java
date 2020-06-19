@@ -2,6 +2,7 @@ package cn.yinsh.hrm.mapper;
 
 import cn.yinsh.hrm.domain.RolePermission;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -17,5 +18,5 @@ import java.util.List;
 @Component
 public interface RolePermissionMapper extends BaseMapper<RolePermission> {
 
-    void insertBatch(Long id, List<Long> permissionId);
+    void insertBatch(@Param("roleId") Long id,@Param("permissionIds") List<Long> permissionId);
 }
