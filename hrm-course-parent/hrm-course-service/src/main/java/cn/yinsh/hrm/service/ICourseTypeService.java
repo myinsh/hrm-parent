@@ -3,6 +3,8 @@ package cn.yinsh.hrm.service;
 import cn.yinsh.hrm.domain.CourseType;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import java.util.List;
+
 /**
  * <p>
  * 课程目录 服务类
@@ -13,4 +15,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface ICourseTypeService extends IService<CourseType> {
 
+    List<CourseType> loaTypeTree();
 }

@@ -5,6 +5,9 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableField;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -65,6 +68,9 @@ public class CourseType implements Serializable {
      */
     @TableField("totalCount")
     private Integer totalCount;
+    //因表中不包含children，所以需要忽略
+    @TableField(exist = false)
+    List<CourseType> children = new ArrayList<>();
 
 
 }
