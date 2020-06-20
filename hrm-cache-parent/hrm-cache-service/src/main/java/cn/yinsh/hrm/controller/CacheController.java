@@ -25,7 +25,7 @@ public class CacheController {
     @GetMapping("/getStr")
     public AjaxResult get(@RequestParam("key") String key) {
         try {
-            String value = RedisUtils.INSTANCE.get("key");
+            String value = RedisUtils.INSTANCE.get(key);
             return AjaxResult.me().setSuccess(true).setMessage("获取成功").setResultObj(value);
         } catch (Exception e) {
             e.printStackTrace();
