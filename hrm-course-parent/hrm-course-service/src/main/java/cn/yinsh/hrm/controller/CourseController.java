@@ -80,7 +80,6 @@ public class CourseController {
     @RequestMapping(value = "/page",method = RequestMethod.POST)
     public PageList<Course> page(@RequestBody CourseQuery query)
     {
-        Page<Course> page = courseService.page(new Page<Course>(query.getPageNum(), query.getPageSize()));
-        return new PageList<>(page.getTotal(),page.getRecords());
+        return courseService.pageAndAdvanced(query);
     }
 }

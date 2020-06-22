@@ -1,7 +1,11 @@
 package cn.yinsh.hrm.mapper;
 
 import cn.yinsh.hrm.domain.Course;
+import cn.yinsh.hrm.query.CourseQuery;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * <p>
@@ -13,4 +17,5 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  */
 public interface CourseMapper extends BaseMapper<Course> {
 
+    IPage<Course> selectByQuery(Page<Course> coursePage, @Param("query") CourseQuery query);
 }

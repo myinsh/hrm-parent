@@ -75,6 +75,8 @@ public class Course implements Serializable {
     private Long endTime;
 
     private String pic;
+    @TableField(exist = false)
+    private CourseType courseType;
 
 
 }
