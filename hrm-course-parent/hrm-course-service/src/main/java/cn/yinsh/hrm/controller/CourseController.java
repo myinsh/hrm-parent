@@ -1,5 +1,6 @@
 package cn.yinsh.hrm.controller;
 
+import cn.yinsh.hrm.controller.vo.CourseAddVo;
 import cn.yinsh.hrm.service.ICourseService;
 import cn.yinsh.hrm.domain.Course;
 import cn.yinsh.hrm.query.CourseQuery;
@@ -17,25 +18,17 @@ public class CourseController {
     @Autowired
     public ICourseService courseService;
 
-    /**
-    * 保存和修改公用的
-    * @param course  传递的实体
-    * @return Ajaxresult转换结果
-    */
-    @RequestMapping(value="/save",method= RequestMethod.POST)
-    public AjaxResult save(@RequestBody Course course){
+    @RequestMapping(value="/add",method=RequestMethod.POST)
+    public AjaxResult save(@RequestBody CourseAddVo courseAddVo){
         try {
-            if(course.getId()!=null){
-                courseService.updateById(course);
-            }else{
-                courseService.save(course);
-            }
+            courseService.add(courseAddVo);
             return AjaxResult.me();
         } catch (Exception e) {
             e.printStackTrace();
-            return AjaxResult.me().setSuccess(false).setMessage("保存对象失败！"+e.getMessage());
+            return AjaxResult.me().setMessage("删除对象失败！"+e.getMessage());
         }
     }
+
 
     /**
     * 删除对象信息
