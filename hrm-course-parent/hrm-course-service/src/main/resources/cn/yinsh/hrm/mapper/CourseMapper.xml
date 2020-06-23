@@ -39,6 +39,26 @@
             <result property="name" column="typename"/>
         </association>
     </resultMap>
+
+    <!--上线-->
+    <update id="onLine">
+        UPDATE t_course
+        SET start_time = #{time},status = 1
+        where id in
+        <foreach collection="ids" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </update>
+    <!--课程下线-->
+    <update id="offLine">
+        UPDATE t_course
+        SET end_time = #{time},status = 0
+        where id in
+        <foreach collection="ids" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </update>
+
     <select id="selectByQuery" resultMap="selectByMap">
         SELECT
         <include refid="colum"/>
