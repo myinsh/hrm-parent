@@ -1,11 +1,14 @@
 package cn.yinsh.hrm.service.impl;
 
 import cn.yinsh.hrm.client.CacheClient;
+import cn.yinsh.hrm.controller.vo.CrumbVo;
 import cn.yinsh.hrm.domain.CourseType;
 import cn.yinsh.hrm.mapper.CourseTypeMapper;
 import cn.yinsh.hrm.service.ICourseTypeService;
 import cn.yinsh.hrm.util.AjaxResult;
+import cn.yinsh.hrm.util.StrUtils;
 import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.sun.xml.internal.ws.api.streaming.XMLStreamWriterFactory;
 import org.apache.commons.lang.StringUtils;
@@ -70,6 +73,34 @@ public class CourseTypeServiceImpl extends ServiceImpl<CourseTypeMapper, CourseT
         }
         //返回数据
         return courseTypeList;
+    }
+
+    //加载类型面包屑
+    @Override
+    public List<CrumbVo> loadCrumbs(Long courseTypeId) {
+        //创建list集合用于保存查询出来课程类型
+        List<CrumbVo> crumbVos = new ArrayList<>();
+        //获取数据库中的path列的值
+        CourseType courseType = baseMapper.selectById(courseTypeId);
+        String path = courseType.getPath();
+        path = path.substring(1);
+        List<Long> ids = StrUtils.splitStr2LongArr(path, "\\.");
+        CrumbVo crumbVo = null;
+        //每循环一次，就为一级课程类型
+        for (Long id : ids) {
+            crumbVo = new CrumbVo();
+            //获取当前级别的类型
+            CourseType currentType = baseMapper.selectById(id);
+            crumbVo.setCurrentType(currentType);
+            //获取当前级别的其他类型
+            Long pid = currentType.getPid();
+            List<CourseType> otherTypes = baseMapper.selectList(new QueryWrapper<CourseType>().eq("pid", pid).ne("id", id));
+            crumbVo.setOtherTypes(otherTypes);
+            crumbVos.add(crumbVo);
+        }
+
+
+        return crumbVos;
     }
 
     private List<CourseType> typeTreeByLoopAndMap(){

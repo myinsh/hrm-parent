@@ -36,11 +36,6 @@
             <artifactId>springfox-swagger-ui</artifactId>
             <version>2.9.2</version>
         </dependency>
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-config</artifactId>
-        </dependency>
-
         <!--需要引入transport-netty3-client，否则会启动报错-->
         <dependency>
             <groupId>org.elasticsearch.plugin</groupId>

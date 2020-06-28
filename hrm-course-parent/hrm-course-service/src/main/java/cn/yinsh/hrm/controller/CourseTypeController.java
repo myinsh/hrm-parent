@@ -1,5 +1,6 @@
 package cn.yinsh.hrm.controller;
 
+import cn.yinsh.hrm.controller.vo.CrumbVo;
 import cn.yinsh.hrm.service.ICourseTypeService;
 import cn.yinsh.hrm.domain.CourseType;
 import cn.yinsh.hrm.query.CourseTypeQuery;
@@ -87,5 +88,10 @@ public class CourseTypeController {
     @GetMapping("/loadTypeTree")
     public List<CourseType> loadTypeTree(){
         return courseTypeService.loaTypeTree();
+    }
+
+    @GetMapping("/loadCrumbs")
+    public List<CrumbVo> loadCrumbs(@RequestParam("courseType") Long courseTypeId){
+        return courseTypeService.loadCrumbs(courseTypeId);
     }
 }

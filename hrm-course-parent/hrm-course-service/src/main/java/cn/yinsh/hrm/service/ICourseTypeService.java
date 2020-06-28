@@ -1,5 +1,6 @@
 package cn.yinsh.hrm.service;
 
+import cn.yinsh.hrm.controller.vo.CrumbVo;
 import cn.yinsh.hrm.domain.CourseType;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -16,4 +17,6 @@ import java.util.List;
 public interface ICourseTypeService extends IService<CourseType> {
 
     List<CourseType> loaTypeTree();
+
+    List<CrumbVo> loadCrumbs(Long courseTypeId);
 }
