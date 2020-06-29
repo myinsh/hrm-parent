@@ -12,6 +12,8 @@
         <module>hrm-support-parent</module>
         <module>hrm-basic-parent</module>
         <module>hrm-system-parent</module>
+        <module>hrm-user-parent</module>
+        <module>hrm-sms-parent</module>
         <module>hrm-course-parent</module>
         <module>hrm-file-parent</module>
         <module>hrm-cache-parent</module>
@@ -46,6 +48,11 @@
                 <groupId>com.baomidou</groupId>
                 <artifactId>mybatis-plus-boot-starter</artifactId>
                 <version>${mybatisplus.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.hutool</groupId>
+                <artifactId>hutool-all</artifactId>
+                <version>5.3.7</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

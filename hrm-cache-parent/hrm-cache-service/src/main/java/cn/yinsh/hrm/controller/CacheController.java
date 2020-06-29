@@ -34,6 +34,7 @@ public class CacheController {
     }
 
     //设置过期时间
+    @GetMapping("/setex")
     public AjaxResult setex(@RequestParam("key") String key, @RequestParam("value") String value, @RequestParam("seconds") Integer seconds) {
         Jedis jedis = null;
         try {

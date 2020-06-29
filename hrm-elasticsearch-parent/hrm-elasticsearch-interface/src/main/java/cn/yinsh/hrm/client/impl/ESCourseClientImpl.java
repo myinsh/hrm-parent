@@ -26,12 +26,12 @@ public class ESCourseClientImpl implements ESCourseClient {
     }
 
     @Override
-    public AjaxResult deleteAll(List<Long> ids) {
+    public PageList<ESCourse> page(ESCourseQuery esCourseQuery) {
         return null;
     }
 
     @Override
-    public PageList<ESCourse> search(ESCourseQuery documentQuery) {
+    public AjaxResult deleteAll(List<Long> ids) {
         return null;
     }
 }

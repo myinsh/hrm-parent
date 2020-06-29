@@ -9,15 +9,18 @@ import org.springframework.data.elasticsearch.annotations.FieldType;
 @Data
 @Document(indexName = "hrm")
 public class ESCourse {
+    private String all;
     private Long id;
     private String name;
     private String users;
     private Long courseTypeId;
-    private String intro;
-    private String description;
-    private String all;
-    private Long startTime;
+    private String gradeName;
     private Long grade;
+    private String tenantName;
+    private Long tenantId;
+    private Long startTime;
+    private String pic;
+    private Float price;
 /*
     @Id
     private Long id;

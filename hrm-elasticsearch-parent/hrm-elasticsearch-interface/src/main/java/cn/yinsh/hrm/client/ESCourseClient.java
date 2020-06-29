@@ -23,6 +23,7 @@ public interface ESCourseClient {
     AjaxResult delete(@RequestParam("id") Long id);
     @DeleteMapping("/deleteAll")
     AjaxResult deleteAll(@RequestBody List<Long> ids);
-    @PostMapping("/search")
-    PageList<ESCourse> search(@RequestBody ESCourseQuery documentQuery);
+
+    @PostMapping("/page")
+    PageList<ESCourse> page(ESCourseQuery esCourseQuery);
 }

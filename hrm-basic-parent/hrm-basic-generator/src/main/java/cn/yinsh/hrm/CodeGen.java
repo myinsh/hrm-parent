@@ -15,7 +15,7 @@ public class CodeGen {
     public static void main(String[] args) throws Exception {
 
         Properties properties = new Properties();
-        properties.load(CodeGen.class.getClassLoader().getResourceAsStream("mybatis-plus-generator-course.properties"));
+        properties.load(CodeGen.class.getClassLoader().getResourceAsStream("mybatis-plus-generator-user.properties"));
 
         // 代码生成器
         AutoGenerator mpg = new AutoGenerator();
@@ -105,7 +105,7 @@ public class CodeGen {
         strategy.setNaming(NamingStrategy.underline_to_camel);
         strategy.setColumnNaming(NamingStrategy.underline_to_camel);
         strategy.setEntityLombokModel(true);
-        strategy.setInclude("t_course_detail","t_course_market","t_course_resource");
+        strategy.setInclude("t_sso","t_vip_address","t_vip_base","t_vip_course_collect","t_vip_course_view","t_vip_grow_log","t_vip_login_log","t_vip_msg","t_vip_realinfo");
         strategy.setTablePrefix("t_");
         mpg.setStrategy(strategy);
         mpg.setTemplateEngine(new VelocityTemplateEngine());

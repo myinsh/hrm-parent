@@ -1,6 +1,7 @@
 package cn.yinsh.hrm.controller;
 
 import cn.yinsh.hrm.controller.vo.CourseAddVo;
+import cn.yinsh.hrm.domain.ESCourse;
 import cn.yinsh.hrm.service.ICourseService;
 import cn.yinsh.hrm.domain.Course;
 import cn.yinsh.hrm.query.CourseQuery;
@@ -80,7 +81,6 @@ public class CourseController {
     //课程上线
     @PostMapping("/onLine")
     public AjaxResult onLine(@RequestBody List<Long> ids){
-
         try {
             courseService.onLine(ids);
             return AjaxResult.me().setMessage("上线成功");
@@ -100,6 +100,10 @@ public class CourseController {
             e.printStackTrace();
             return AjaxResult.me().setSuccess(false).setMessage("下线失败"+e.getMessage());
         }
+    }
+    @PostMapping("/pageOnline")
+    public PageList<ESCourse> pageOnline(@RequestBody CourseQuery query){
+        return courseService.pageOnline(query);
     }
 
 

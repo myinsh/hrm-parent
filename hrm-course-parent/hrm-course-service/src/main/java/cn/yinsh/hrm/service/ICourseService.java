@@ -2,6 +2,7 @@ package cn.yinsh.hrm.service;
 
 import cn.yinsh.hrm.controller.vo.CourseAddVo;
 import cn.yinsh.hrm.domain.Course;
+import cn.yinsh.hrm.domain.ESCourse;
 import cn.yinsh.hrm.query.CourseQuery;
 import cn.yinsh.hrm.util.PageList;
 import com.baomidou.mybatisplus.extension.service.IService;
@@ -25,4 +26,7 @@ public interface ICourseService extends IService<Course> {
     void onLine(List<Long> ids);
 
     void offLine(List<Long> ids);
+
+    PageList<ESCourse> pageOnline(CourseQuery query);
+
 }

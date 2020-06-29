@@ -5,15 +5,14 @@ import cn.yinsh.hrm.query.ESCourseQuery;
 import cn.yinsh.hrm.repository.ESCourseRepository;
 import cn.yinsh.hrm.util.AjaxResult;
 import cn.yinsh.hrm.util.PageList;
-import org.elasticsearch.index.query.BoolQueryBuilder;
-import org.elasticsearch.index.query.MatchQueryBuilder;
-import org.elasticsearch.index.query.QueryBuilder;
-import org.elasticsearch.index.query.TermQueryBuilder;
+import org.apache.commons.lang.StringUtils;
+import org.elasticsearch.index.query.*;
+import org.elasticsearch.search.sort.FieldSortBuilder;
+import org.elasticsearch.search.sort.SortOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -68,33 +67,65 @@ public class ESCourseController {
             return AjaxResult.me().setSuccess(false).setMessage("删除失败");
         }
     }
-    @PostMapping("/search")
-    public PageList<ESCourse> search(@RequestBody ESCourseQuery documentQuery){
+
+    @PostMapping("/page")
+    public PageList<ESCourse> page(@RequestBody ESCourseQuery esCourseQuery){
         NativeSearchQueryBuilder builder = new NativeSearchQueryBuilder();
-        //创建查询条件
         BoolQueryBuilder boolQueryBuilder = new BoolQueryBuilder();
-        //关键字查询
-        if(!StringUtils.isEmpty(documentQuery.getKeyword())){
-            boolQueryBuilder.must(new MatchQueryBuilder("all",documentQuery.getKeyword()));
+        //查询
+        if(StringUtils.isNotEmpty(esCourseQuery.getKeyword())){
+            boolQueryBuilder.must(new MatchQueryBuilder("all",esCourseQuery.getKeyword()));
+        }
+        if(esCourseQuery.getCourseType()!=null){
+            boolQueryBuilder.must(new TermQueryBuilder("courseTypeId",esCourseQuery.getCourseType()));
+        }
+        if(esCourseQuery.getTenantId()!=null){
+            boolQueryBuilder.must(new TermQueryBuilder("tenantId",esCourseQuery.getTenantId()));
         }
         //过滤
         List<QueryBuilder> filter = boolQueryBuilder.filter();
-        //过滤课程类型
-        if (documentQuery.getCourseTypeId()!=null){
-            filter.add(new TermQueryBuilder("courseTypeId",documentQuery.getCourseTypeId()));
+        RangeQueryBuilder rangeQueryBuilder = new RangeQueryBuilder("price");
+        if(esCourseQuery.getMaxPrice()!=null){
+            rangeQueryBuilder.lte(esCourseQuery.getMaxPrice());
         }
-        //等级
-        if (documentQuery.getGrade()!=null){
-            filter.add(new TermQueryBuilder("Grade",documentQuery.getGrade()));
+        if(esCourseQuery.getMinPrice()!=null){
+            rangeQueryBuilder.gte(esCourseQuery.getMinPrice());
         }
+        filter.add(rangeQueryBuilder);
+
         builder.withQuery(boolQueryBuilder);
+        //排序
+        String fieldName = "price";
+        SortOrder order = SortOrder.ASC;
+
+        if(StringUtils.isNotEmpty(esCourseQuery.getColumnName())){
+            switch (esCourseQuery.getColumnName()){
+                case "xp":
+                    fieldName = "startTime";
+                    break;
+                case "jg":
+                    fieldName = "price";
+                    break;
+            }
+        }
+        if(StringUtils.isNotEmpty(esCourseQuery.getOrderType())){
+            switch (esCourseQuery.getOrderType()){
+                case "asc":
+                    order = SortOrder.ASC;
+                    break;
+                case "desc":
+                    order = SortOrder.DESC;
+                    break;
+            }
+        }
+        builder.withSort(new FieldSortBuilder(fieldName).order(order));
         //分页
-        builder.withPageable(PageRequest.of(documentQuery.getPageNum()-1,documentQuery.getPageSize()));
-        //查询后将查询结果封装到list集合中
-        Page<ESCourse> search = esCourseRepository.search(builder.build());
+        builder.withPageable(PageRequest.of(esCourseQuery.getPageNum()-1,esCourseQuery.getPageSize()));
+        Page<ESCourse> docPage = esCourseRepository.search(builder.build());
         PageList<ESCourse> pageList = new PageList<>();
-        pageList.setRows(search.getContent());
-        pageList.setTotal(pageList.getTotal());
+        pageList.setTotal(docPage.getTotalElements());
+        pageList.setRows(docPage.getContent());
+
         return pageList;
     }
 

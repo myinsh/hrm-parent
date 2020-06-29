@@ -1,0 +1,9 @@
+spring:
+  cloud:
+    config:
+      #uri: http://localhost:6969 单机版配置
+      profile: dev #环境
+      name: application-user #名称
+      discovery:
+        service-id: config-server
+        enabled: true

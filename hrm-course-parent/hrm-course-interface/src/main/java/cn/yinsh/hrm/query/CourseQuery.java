@@ -15,5 +15,11 @@ public class CourseQuery extends BaseQuery {
 
 
     private Integer status;
+    private Long courseType;
+    private Float maxPrice;
+    private Float minPrice;
+    private Long tenantId;
+    private String columnName;
+    private String orderType;
 
 }
