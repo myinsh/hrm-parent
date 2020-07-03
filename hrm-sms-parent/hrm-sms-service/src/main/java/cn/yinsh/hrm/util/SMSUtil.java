@@ -13,7 +13,7 @@ public enum SMSUtil {
     INSTANCE;
 
     public void sendSMS(String phoneNum,String signName,String templateCode,String templateParam) throws ClientException {
-        DefaultProfile profile = DefaultProfile.getProfile("cn-hangzhou", "LTAI4Fv538mjo3huboPucPQT", "QvFqlmIuIIQUvW2UDJ2jvnTIBQS3VT");
+        DefaultProfile profile = DefaultProfile.getProfile("cn-hangzhou", "xx", "xx");
         IAcsClient client = new DefaultAcsClient(profile);
 
         CommonRequest request = new CommonRequest();
@@ -26,6 +26,6 @@ public enum SMSUtil {
         request.putQueryParameter("SignName", signName);
         request.putQueryParameter("TemplateCode", templateCode);
         request.putQueryParameter("TemplateParam", templateParam);
-        CommonResponse response = client.getCommonResponse(request);
+        client.getCommonResponse(request);
     }
 }

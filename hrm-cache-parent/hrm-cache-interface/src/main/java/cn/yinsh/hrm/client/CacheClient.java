@@ -4,6 +4,8 @@ import cn.yinsh.hrm.client.impl.CacheClientImpl;
 import cn.yinsh.hrm.util.AjaxResult;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 @FeignClient(name = "cache-service",fallback = CacheClientImpl.class)
 public interface CacheClient {
@@ -22,4 +24,6 @@ public interface CacheClient {
 
     @GetMapping("/deleteKey")
     AjaxResult deleteKey(@RequestParam("key") String key);
+    @PostMapping("/setBytes")
+    AjaxResult setBytes(@RequestParam("key") String key,@RequestParam("seconds")Integer seconds,@RequestBody byte[] value);
 }

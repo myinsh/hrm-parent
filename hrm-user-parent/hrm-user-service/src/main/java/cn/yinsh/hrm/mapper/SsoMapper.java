@@ -13,4 +13,5 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  */
 public interface SsoMapper extends BaseMapper<Sso> {
 
+    Sso selectByName(String name);
 }

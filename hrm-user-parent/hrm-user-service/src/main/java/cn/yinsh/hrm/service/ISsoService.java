@@ -1,5 +1,6 @@
 package cn.yinsh.hrm.service;
 
+import cn.yinsh.hrm.controller.vo.RegisterVo;
 import cn.yinsh.hrm.domain.Sso;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -13,4 +14,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface ISsoService extends IService<Sso> {
 
+    void telephoneReg(RegisterVo vo);
+    Sso getByName(String name);
 }

@@ -27,6 +27,11 @@ public class CacheClientImpl implements CacheClient {
     }
 
     @Override
+    public AjaxResult setBytes(String key, Integer seconds, byte[] value) {
+        return AjaxResult.me().setSuccess(false).setMessage("系统异常");
+    }
+
+    @Override
     public AjaxResult deleteKey(String key) {
         return AjaxResult.me().setSuccess(false).setMessage("系统异常");
     }

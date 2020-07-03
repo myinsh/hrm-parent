@@ -1,21 +1,127 @@
 package cn.yinsh.hrm.controller;
 
+import cn.hutool.crypto.SecureUtil;
+import cn.yinsh.hrm.client.CacheClient;
+import cn.yinsh.hrm.controller.vo.LoginVo;
+import cn.yinsh.hrm.controller.vo.RegisterVo;
 import cn.yinsh.hrm.service.ISsoService;
 import cn.yinsh.hrm.domain.Sso;
 import cn.yinsh.hrm.query.SsoQuery;
 import cn.yinsh.hrm.util.AjaxResult;
 import cn.yinsh.hrm.util.PageList;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/sso")
 public class SsoController {
     @Autowired
     public ISsoService ssoService;
+    @Autowired
+    private CacheClient cacheClient;
+
+
+    //注册
+    @PostMapping("/telephoneRegister")
+    public AjaxResult telephoneRegister(@RequestBody RegisterVo vo){
+
+        //图形验证码验证
+        String key = "CODE:IMAGECODE:"+vo.getUuid();
+        AjaxResult ajaxResult = cacheClient.get(key);
+        // 判断图形验证码
+        if(!ajaxResult.isSuccess()){
+            return AjaxResult.me().setSuccess(false).setMessage(ajaxResult.getMessage());
+        }
+        String imageCodeValue = (String) ajaxResult.getResultObj();
+        if(StringUtils.isEmpty(imageCodeValue)){
+            return AjaxResult.me().setSuccess(false).setMessage("图形验证码过期");
+        }
+        if(!vo.getImageCode().equalsIgnoreCase(imageCodeValue)){
+            return AjaxResult.me().setSuccess(false).setMessage("图形验证码错误");
+        }
+
+        //判断短信验证码
+        key = "CODE:REGCODE:"+vo.getTelephone();
+        ajaxResult = cacheClient.get(key);
+        if(!ajaxResult.isSuccess()){
+            return AjaxResult.me().setSuccess(false).setMessage(ajaxResult.getMessage());
+        }
+        String smsCodeValue = (String) ajaxResult.getResultObj();
+        if(StringUtils.isEmpty(smsCodeValue)){
+            return AjaxResult.me().setSuccess(false).setMessage("短信验证码过期");
+        }
+        String smsCode = smsCodeValue.split(",")[0];
+        if(!vo.getSmsCode().equalsIgnoreCase(smsCode)){
+            return AjaxResult.me().setSuccess(false).setMessage("短信验证码错误");
+        }
+
+        //交给service进行注册
+        try {
+            ssoService.telephoneReg(vo);
+            return AjaxResult.me().setSuccess(true).setMessage("注册成功！");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return AjaxResult.me().setSuccess(false).setMessage("注册失败！"+e.getMessage());
+        }
+    }
+
+    //登录
+    @PostMapping("/login")
+    public AjaxResult login(@RequestBody LoginVo vo){
+
+        //根据name查询登录信息
+        Sso sso = ssoService.getByName(vo.getName());
+        if(sso==null){
+            return AjaxResult.me().setSuccess(false).setMessage("用户名或密码错误");
+        }
+
+        String salt = sso.getSalt();
+        String password = SecureUtil.md5(vo.getPassword() + salt);
+        if(!password.equals(sso.getPassword())){
+            return AjaxResult.me().setSuccess(false).setMessage("用户名或密码错误");
+        }
+
+        //生成token
+        String token = UUID.randomUUID().toString();
+        //用户信息保存到redis中
+        sso.setPassword(null);
+        sso.setSalt(null);
+
+        try(
+                ByteArrayOutputStream byteOutputStream=new ByteArrayOutputStream();
+                ObjectOutputStream objectOutputStream =new ObjectOutputStream(byteOutputStream)) {
+
+            objectOutputStream.writeObject(sso);
+            byte[] bytes = byteOutputStream.toByteArray();
+
+            String key = "USER:"+token;
+            AjaxResult ajaxResult = cacheClient.setBytes(key,600,bytes);
+            //将后端生成的token响应给前端
+            if(ajaxResult.isSuccess()){
+                ajaxResult.setResultObj(token);
+            }
+            return ajaxResult;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return AjaxResult.me().setSuccess(false).setMessage("失败"+e.getMessage());
+        }
+    }
+
+
+
+
+
+
+
+
 
     /**
     * 保存和修改公用的

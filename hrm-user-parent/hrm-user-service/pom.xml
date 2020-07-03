@@ -65,6 +65,11 @@
             <artifactId>hrm-cache-interface</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>cn.yinsh</groupId>
+            <artifactId>hrm-sms-interface</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
